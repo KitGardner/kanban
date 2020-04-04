@@ -2,30 +2,18 @@ import BaseController from "../utils/BaseController";
 import Auth0Provider from "@bcwdev/auth0provider";
 import { dbContext } from "../db/DbContext";
 
-export class BoardsController extends BaseController {
+export class CollaboratorsController extends BaseController {
   constructor() {
-    super("api/boards");
+    super("api/collaborators");
     this.router
       .use(Auth0Provider.getAuthorizedUserInfo)
       .use(Auth0Provider.isAuthorized)
-      .get("", this.getAllBoards)
-      .get("/:boardId", this.getBoard)
-      .post("", this.createBoard)
-      .put("/:boardId", this.updateBoard)
-      .delete("/:id", this.deleteBoard);
+      .get("/:boardId", this.getCollaborators)
+      .post("", this.addCollaborator);
   }
 
-  async getAllBoards(req, res, next) {
-    try {
-      // FIXME MUST be abstracted to a service
-      let boards = await dbContext.Boards.find({ creatorEmail: req.userInfo.email });
-      res.send(boards);
-    } catch (error) {
-      next(error);
-    }
 
-  }
-  async getBoard(req, res, next) {
+  async getCollaborators(req, res, next) {
     try {
       // FIXME MUST be abstracted to a service
       let board = await dbContext.Boards.findOne({
@@ -38,7 +26,7 @@ export class BoardsController extends BaseController {
     }
 
   }
-  async createBoard(req, res, next) {
+  async addCollaborator(req, res, next) {
     try {
       // FIXME MUST be abstracted to a service
       // NOTE ONLY TRUST THE SERVER TO DO THIS
@@ -50,21 +38,4 @@ export class BoardsController extends BaseController {
     }
 
   }
-
-  async updateBoard(req, res, next) {
-    try {
-
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async deleteBoard(req, res, next) {
-    try {
-
-    } catch (error) {
-      next(error);
-    }
-  }
-
 }

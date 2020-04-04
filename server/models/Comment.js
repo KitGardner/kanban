@@ -2,12 +2,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
-export const BoardSchema = new Schema(
+export const CommentSchema = new Schema(
   {
-    name: { type: String, required: true },
-    description: { type: String, required: true },
+    comment: { type: String, required: true },
     creatorId: { type: ObjectId, ref: "Profile", required: true },
-    boardLists: [{ type: ObjectId, ref: "BoardList" }],
+    taskId: { type: ObjectId, ref: "Task", required: true },
     deleted: { type: Boolean, default: false }
   },
   { timestamps: true, toJSON: { virtuals: true } }

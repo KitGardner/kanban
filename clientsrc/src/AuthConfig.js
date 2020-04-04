@@ -1,3 +1,3 @@
-export const domain = "codeworksclassroom.auth0.com";
-export const clientId = "pOXw2OGv1LsYi7LEBmDF04RLkXQvldml";
-export const audience = "https://codeworksclassroom.com";
+export const domain = "krylancelo-auth.auth0.com";
+export const clientId = "ZcDlqWwLbthCo1uMwXiPObeaTmPSQIWp";
+export const audience = "https://kanban-api.com";

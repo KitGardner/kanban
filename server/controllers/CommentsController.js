@@ -2,20 +2,19 @@ import BaseController from "../utils/BaseController";
 import Auth0Provider from "@bcwdev/auth0provider";
 import { dbContext } from "../db/DbContext";
 
-export class BoardsController extends BaseController {
+export class CommentsController extends BaseController {
   constructor() {
-    super("api/boards");
+    super("api/comments");
     this.router
       .use(Auth0Provider.getAuthorizedUserInfo)
       .use(Auth0Provider.isAuthorized)
-      .get("", this.getAllBoards)
-      .get("/:boardId", this.getBoard)
-      .post("", this.createBoard)
-      .put("/:boardId", this.updateBoard)
-      .delete("/:id", this.deleteBoard);
+      .get("/:taskId", this.getTaskComments)
+      .post("", this.createComment)
+      .put("/:boardId", this.updateComment)
+      .delete("/:id", this.deleteComment);
   }
 
-  async getAllBoards(req, res, next) {
+  async getTaskComments(req, res, next) {
     try {
       // FIXME MUST be abstracted to a service
       let boards = await dbContext.Boards.find({ creatorEmail: req.userInfo.email });
@@ -25,20 +24,7 @@ export class BoardsController extends BaseController {
     }
 
   }
-  async getBoard(req, res, next) {
-    try {
-      // FIXME MUST be abstracted to a service
-      let board = await dbContext.Boards.findOne({
-        _id: req.params.boardId,
-        creatorEmail: req.userInfo.email
-      });
-      res.send(board);
-    } catch (error) {
-      next(error);
-    }
-
-  }
-  async createBoard(req, res, next) {
+  async createComment(req, res, next) {
     try {
       // FIXME MUST be abstracted to a service
       // NOTE ONLY TRUST THE SERVER TO DO THIS
@@ -51,7 +37,7 @@ export class BoardsController extends BaseController {
 
   }
 
-  async updateBoard(req, res, next) {
+  async updateComment(req, res, next) {
     try {
 
     } catch (error) {
@@ -59,7 +45,7 @@ export class BoardsController extends BaseController {
     }
   }
 
-  async deleteBoard(req, res, next) {
+  async deleteComment(req, res, next) {
     try {
 
     } catch (error) {

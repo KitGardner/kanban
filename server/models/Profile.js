@@ -11,7 +11,6 @@ const Profile = new Schema(
   {
     subs: [{ type: String, unique: true }],
     email: { type: String, lowercase: true, unique: true },
-    contactEmail: { type: String, lowercase: true },
     name: { type: String, required: true },
     picture: { type: String },
     phones: [PhoneSchema],
