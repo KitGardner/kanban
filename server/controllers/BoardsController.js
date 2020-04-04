@@ -1,6 +1,6 @@
 import BaseController from "../utils/BaseController";
 import Auth0Provider from "@bcwdev/auth0provider";
-import { dbContext } from "../db/DbContext";
+import boardsService from "../services/BoardsService";
 
 export class BoardsController extends BaseController {
   constructor() {
@@ -9,17 +9,16 @@ export class BoardsController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .use(Auth0Provider.isAuthorized)
       .get("", this.getAllBoards)
-      .get("/:boardId", this.getBoard)
+      .get("/:id", this.getBoard)
       .post("", this.createBoard)
-      .put("/:boardId", this.updateBoard)
+      .put("/:id", this.updateBoard)
       .delete("/:id", this.deleteBoard);
   }
 
   async getAllBoards(req, res, next) {
     try {
-      // FIXME MUST be abstracted to a service
-      let boards = await dbContext.Boards.find({ creatorEmail: req.userInfo.email });
-      res.send(boards);
+      let userBoards = await boardsService.getUserBoards(req.userInfo);
+      res.send(userBoards);
     } catch (error) {
       next(error);
     }
@@ -27,11 +26,7 @@ export class BoardsController extends BaseController {
   }
   async getBoard(req, res, next) {
     try {
-      // FIXME MUST be abstracted to a service
-      let board = await dbContext.Boards.findOne({
-        _id: req.params.boardId,
-        creatorEmail: req.userInfo.email
-      });
+      let board = await boardsService.getBoardById(req.params.id, req.userInfo);
       res.send(board);
     } catch (error) {
       next(error);
@@ -40,11 +35,8 @@ export class BoardsController extends BaseController {
   }
   async createBoard(req, res, next) {
     try {
-      // FIXME MUST be abstracted to a service
-      // NOTE ONLY TRUST THE SERVER TO DO THIS
-      req.body.creatorEmail = req.userInfo.email;
-      let board = await dbContext.Boards.create(req.body);
-      res.send(board);
+      let createdBoard = await boardsService.createBoard(req.body, req.userInfo);
+      res.send(createdBoard);
     } catch (error) {
       next(error);
     }
@@ -53,7 +45,8 @@ export class BoardsController extends BaseController {
 
   async updateBoard(req, res, next) {
     try {
-
+      let updatedBoard = await boardsService.updateBoard(req.params.id, req.body, req.userInfo);
+      res.send(updatedBoard);
     } catch (error) {
       next(error);
     }
@@ -61,7 +54,8 @@ export class BoardsController extends BaseController {
 
   async deleteBoard(req, res, next) {
     try {
-
+      let result = await boardsService.deleteBoard(req.params.id, req.userInfo);
+      res.send(result);
     } catch (error) {
       next(error);
     }
