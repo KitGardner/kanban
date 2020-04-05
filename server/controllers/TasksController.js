@@ -1,6 +1,7 @@
 import BaseController from "../utils/BaseController";
 import Auth0Provider from "@bcwdev/auth0provider";
-import { dbContext } from "../db/DbContext";
+import tasksService from "../services/TasksService";
+import commentsService from "../services/CommentsService";
 
 export class TasksController extends BaseController {
   constructor() {
@@ -9,51 +10,43 @@ export class TasksController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .use(Auth0Provider.isAuthorized)
       .get("/:id", this.getTaskById)
-      .get("/:listId", this.getListTasks)
+      .get(":taskId/comments", this.getTaskComments)
       .post("", this.createTask)
-      .put("/:boardId", this.updateTask)
+      .put("/:id", this.updateTask)
       .delete("/:id", this.deleteTask);
   }
 
   async getTaskById(req, res, next) {
     try {
-      // FIXME MUST be abstracted to a service
-      let boards = await dbContext.Boards.find({ creatorEmail: req.userInfo.email });
-      res.send(boards);
+      let task = await tasksService.getTaskById(req.params.id, req.userInfo);
+      res.send(task);
     } catch (error) {
       next(error);
     }
-
   }
-  async getListTasks(req, res, next) {
+
+  async getTaskComments(req, res, next) {
     try {
-      // FIXME MUST be abstracted to a service
-      let board = await dbContext.Boards.findOne({
-        _id: req.params.boardId,
-        creatorEmail: req.userInfo.email
-      });
-      res.send(board);
+      let comments = commentsService.getCommentsForTask(req.params.taskId);
+      res.send(comments);
     } catch (error) {
-      next(error);
+      next(error)
     }
-
   }
+
   async createTask(req, res, next) {
     try {
-      // FIXME MUST be abstracted to a service
-      // NOTE ONLY TRUST THE SERVER TO DO THIS
-      req.body.creatorEmail = req.userInfo.email;
-      let board = await dbContext.Boards.create(req.body);
-      res.send(board);
+      let newTask = await tasksService.createTask(req.body, req.userInfo);
+      res.send(newTask);
     } catch (error) {
       next(error);
     }
-
   }
 
   async updateTask(req, res, next) {
     try {
-
+      let updatedTask = await tasksService.updateTask(req.params.id, req.body, req.userInfo);
+      res.send(updatedTask);
     } catch (error) {
       next(error);
     }
@@ -61,7 +54,8 @@ export class TasksController extends BaseController {
 
   async deleteTask(req, res, next) {
     try {
-
+      let deleted = await tasksService.deleteTask(req.params.id, req.userInfo);
+      res.send(deleted.id);
     } catch (error) {
       next(error);
     }

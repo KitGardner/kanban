@@ -2,24 +2,17 @@ import { profilesService } from "./ProfilesService";
 import { UnAuthorized, Unexpected, BadRequest } from "../utils/Errors";
 import { dbContext } from "../db/DbContext";
 import collaboratorsService from "./CollaboratorsService";
-
-async function validateCaller(userInfo) {
-  let profile = await profilesService.getProfile(userInfo);
-  if (!profile.subs.includes(userInfo.sub)) {
-    throw new UnAuthorized("The calling user does not match the profile sent");
-  }
-  return profile;
-}
+import helpers from "../utils/Helpers";
 
 class BoardsService {
   async getBoardById(id, userInfo) {
-    let profile = await validateCaller(userInfo);
+    let profile = await helpers.validateCaller(userInfo);
 
     let userBoard = await dbContext.Boards.find({ id: id, deleted: false });
     return userBoard;
   }
   async deleteBoard(id, userInfo) {
-    let profile = await validateCaller(userInfo);
+    let profile = await helpers.validateCaller(userInfo);
 
     let userBoard = await dbContext.Boards.findById(id);
 
@@ -35,7 +28,7 @@ class BoardsService {
     return updatedBoard.id;
   }
   async updateBoard(id, boardData, userInfo) {
-    let profile = await validateCaller(userInfo);
+    let profile = await helpers.validateCaller(userInfo);
 
     let oldBoard = await dbContext.Boards.findById(id);
     if (oldBoard.creatorId != profile.id) {
@@ -47,7 +40,7 @@ class BoardsService {
 
   }
   async createBoard(boardData, userInfo) {
-    let profile = await validateCaller(userInfo);
+    let profile = await helpers.validateCaller(userInfo);
     let createdBoard = await dbContext.Boards.create({ ...boardData, creatorId: profile.id });
     if (!createdBoard) {
       throw new Unexpected("There was an error creating the board");
@@ -58,7 +51,7 @@ class BoardsService {
     return createdBoard;
   }
   async getUserBoards(userInfo) {
-    let profile = await validateCaller(userInfo);
+    let profile = await helpers.validateCaller(userInfo);
 
     let userBoards = dbContext.Boards.find({ creatorId: profile.id, deleted: false });
     // TODO Also grab boards that the user is a collaborator in and stitch them together

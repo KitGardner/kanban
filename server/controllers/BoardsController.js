@@ -1,6 +1,7 @@
 import BaseController from "../utils/BaseController";
 import Auth0Provider from "@bcwdev/auth0provider";
 import boardsService from "../services/BoardsService";
+import boardListsService from "../services/BoardListsService";
 
 export class BoardsController extends BaseController {
   constructor() {
@@ -10,6 +11,7 @@ export class BoardsController extends BaseController {
       .use(Auth0Provider.isAuthorized)
       .get("", this.getAllBoards)
       .get("/:id", this.getBoard)
+      .get("/:boardId/lists", this.getBoardLists)
       .post("", this.createBoard)
       .put("/:id", this.updateBoard)
       .delete("/:id", this.deleteBoard);
@@ -31,7 +33,14 @@ export class BoardsController extends BaseController {
     } catch (error) {
       next(error);
     }
-
+  }
+  async getBoardLists(req, res, next) {
+    try {
+      let boardLists = await boardListsService.getListsByBoardId(req.params.boardId, req.userInfo);
+      res.send(boardLists);
+    } catch (error) {
+      next(error)
+    }
   }
   async createBoard(req, res, next) {
     try {
@@ -60,5 +69,10 @@ export class BoardsController extends BaseController {
       next(error);
     }
   }
+
+  // TODO implement full delete for all objects. This delete should delete all children objects as well. NO ORPHANS!!
+  // TODO Add Board Id to all objects. This way for any call we can verify if the user is the creator and or collaborator for this board before making changes.
+  // TODO Test all endpoints to ensure proper operation.
+  // TODO think about adding collaborator logic to Profile controller to grab all boards that the user is a collaborator of.
 
 }

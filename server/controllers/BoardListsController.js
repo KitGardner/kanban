@@ -1,6 +1,8 @@
 import BaseController from "../utils/BaseController";
 import Auth0Provider from "@bcwdev/auth0provider";
 import { dbContext } from "../db/DbContext";
+import boardListsService from "../services/BoardListsService";
+import tasksService from "../services/TasksService";
 
 export class BoardListsController extends BaseController {
   constructor() {
@@ -8,41 +10,33 @@ export class BoardListsController extends BaseController {
     this.router
       .use(Auth0Provider.getAuthorizedUserInfo)
       .use(Auth0Provider.isAuthorized)
-      .get("/:boardId", this.getBoardLists)
+      .get("/:listId/tasks", this.getListTasks)
       .post("", this.createBoardList)
       .put("/:Id", this.updateBoardList)
       .delete("/:id", this.deleteBoardList);
   }
 
-  async getBoardLists(req, res, next) {
+  async getListTasks(req, res, next) {
     try {
-      // FIXME MUST be abstracted to a service
-      let board = await dbContext.Boards.findOne({
-        _id: req.params.boardId,
-        creatorEmail: req.userInfo.email
-      });
-      res.send(board);
+      let listTasks = await tasksService.getListTasks(req.params.listId, req.userInfo);
+      res.send(listTasks);
     } catch (error) {
-      next(error);
+      next(error)
     }
-
   }
   async createBoardList(req, res, next) {
     try {
-      // FIXME MUST be abstracted to a service
-      // NOTE ONLY TRUST THE SERVER TO DO THIS
-      req.body.creatorEmail = req.userInfo.email;
-      let board = await dbContext.Boards.create(req.body);
-      res.send(board);
+      let createdList = await boardListsService.createBoardList(req.body, req.userInfo);
+      res.send(createdList);
     } catch (error) {
       next(error);
     }
-
   }
 
   async updateBoardList(req, res, next) {
     try {
-
+      let updatedBoardList = await boardListsService.updatedBoardList(req.body, req.userInfo, req.params.id);
+      res.send(updatedBoardList);
     } catch (error) {
       next(error);
     }
@@ -50,7 +44,8 @@ export class BoardListsController extends BaseController {
 
   async deleteBoardList(req, res, next) {
     try {
-
+      let deleted = await boardListsService.deleteBoardList(req.params.id, req.userInfo);
+      res.send(deleted.id);
     } catch (error) {
       next(error);
     }
