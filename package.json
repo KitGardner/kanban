@@ -12,7 +12,7 @@
     "build": "npm run build --prefix ./clientsrc",
     "postinstall": "cd clientsrc && npm install"
   },
-  "author": "Codeworks",
+  "author": "GamesDevKit",
   "license": "ISC",
   "dependencies": {
     "@bcwdev/auth0-vue": "0.0.7",
