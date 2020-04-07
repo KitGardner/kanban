@@ -5,10 +5,13 @@ import collaboratorsService from "./CollaboratorsService";
 import helpers from "../utils/Helpers";
 
 class BoardsService {
+  // FIXME this looks like it might cause some redundancy. Look into cleaning it up.
   async getBoardById(id, userInfo) {
-    let profile = await helpers.validateCaller(userInfo);
+    if (userInfo) {
+      let profile = await helpers.validateCaller(userInfo);
+    }
 
-    let userBoard = await dbContext.Boards.find({ id: id, deleted: false });
+    let userBoard = await dbContext.Boards.find({ _id: id, deleted: false });
     return userBoard;
   }
   async deleteBoard(id, userInfo) {

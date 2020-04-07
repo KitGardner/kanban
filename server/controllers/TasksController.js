@@ -10,7 +10,7 @@ export class TasksController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .use(Auth0Provider.isAuthorized)
       .get("/:id", this.getTaskById)
-      .get(":taskId/comments", this.getTaskComments)
+      .get("/:taskId/comments", this.getTaskComments)
       .post("", this.createTask)
       .put("/:id", this.updateTask)
       .delete("/:id", this.deleteTask);
@@ -27,7 +27,7 @@ export class TasksController extends BaseController {
 
   async getTaskComments(req, res, next) {
     try {
-      let comments = commentsService.getCommentsForTask(req.params.taskId);
+      let comments = await commentsService.getCommentsForTask(req.params.taskId);
       res.send(comments);
     } catch (error) {
       next(error)

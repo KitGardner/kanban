@@ -7,8 +7,6 @@ import CollaboratorSchema from "../models/Collaborator";
 import { CommentSchema } from "../models/Comment"
 import { TaskSchema } from "../models/Task"
 
-
-
 class DbContext {
   Profile = mongoose.model("Profile", ProfileSchema);
   Values = mongoose.model("Value", ValueSchema);

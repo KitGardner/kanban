@@ -4,13 +4,15 @@ import { UnAuthorized } from "../utils/Errors";
 
 class CommentsService {
   async deleteComment(id, userInfo) {
-    let profile = await helpers.validateCaller(userInfo);
+    if (userInfo) {
+      let profile = await helpers.validateCaller(userInfo);
+    }
     let comment = await dbContext.Comments.findById(id);
     if (comment.creatorId != profile.id) {
       throw new UnAuthorized("You are not the creator of this comment, therefore you cannot delete it.")
     }
 
-    let updatedComment = await dbContext.Comments.findByIdAndUpdate(id, { deleted: false }, { new: true });
+    let updatedComment = await dbContext.Comments.findByIdAndUpdate(id, { deleted: true }, { new: true });
     return updatedComment;
   }
   async updateComment(id, commentData, userInfo) {

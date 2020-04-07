@@ -5,12 +5,11 @@
   "main": "index.js",
   "scripts": {
     "debug": "node index.js",
-    "start": "node index.js",
+    "start": "env NODE_ENV=production node index.js",
     "dev": "node index.js",
     "setup": "npm install",
     "serve": "npm run serve --prefix ./clientsrc",
-    "build": "npm install @vue/cli@latest && npm run build --prefix ./clientsrc",
-    "postinstall": "cd clientsrc && npm install"
+    "build": "npm install @vue/cli@latest && env NODE_ENV=test npm install --prefix ./clientsrc && npm run build --prefix ./clientsrc"
   },
   "author": "GamesDevKit",
   "license": "ISC",
@@ -27,7 +26,7 @@
     "socket.io": "^2.3.0"
   },
   "engines": {
-    "node": "^12.0.0",
-    "npm": "^6.9.0"
+    "node": "^12.16.1",
+    "npm": "^6.14.4"
   }
 }

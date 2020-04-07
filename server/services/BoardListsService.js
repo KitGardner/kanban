@@ -1,4 +1,4 @@
-import { UnAuthorized, BadRequest } from "../utils/Errors";
+import { UnAuthorized, BadRequest, Unexpected } from "../utils/Errors";
 import boardsService from "./BoardsService";
 import { dbContext } from "../db/DbContext";
 import helpers from "../utils/Helpers";
@@ -37,8 +37,9 @@ class BoardListsService {
     let profile = await helpers.validateCaller(userInfo);
 
     let board = await boardsService.getBoardById(boardListData.boardId);
-    if (board.creatorId != profile.id) {
-      throw new UnAuthorized("You are not the creator of this board which means you cannot modfity it.")
+
+    if (board[0].creatorId != profile.id) {
+      throw new UnAuthorized("You are not the creator of this board which means you cannot modify it.")
     }
 
     let newBoardList = await dbContext.BoardLists.create({ ...boardListData, creatorId: profile.id });

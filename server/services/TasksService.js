@@ -2,6 +2,11 @@ import helpers from "../utils/Helpers";
 import { dbContext } from "../db/DbContext";
 
 class TasksService {
+  async getBoardTasks(boardId, userInfo) {
+    let profile = await helpers.validateCaller(userInfo);
+    let boardTasks = await dbContext.Tasks.find({ boardId: boardId, deleted: false });
+    return boardTasks;
+  }
   async getListTasks(listId, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
     let listTasks = await dbContext.Tasks.find({ boardListId: listId, deleted: false });
@@ -10,6 +15,8 @@ class TasksService {
   async deleteTask(id, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
     let updatedTask = await dbContext.Tasks.findByIdAndUpdate(id, { deleted: true }, { new: true });
+
+    let result = await dbContext.Comments.updateMany({ taskId: updatedTask.id }, { deleted: true });
     return updatedTask;
   }
   async updateTask(id, taskData, userInfo) {
@@ -24,7 +31,7 @@ class TasksService {
   }
   async getTaskById(id, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
-    let task = dbContext.Tasks.find({ id: id, deleted: false });
+    let task = await dbContext.Tasks.find({ _id: id, deleted: false });
     return task;
   }
 

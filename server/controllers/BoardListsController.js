@@ -1,6 +1,5 @@
 import BaseController from "../utils/BaseController";
 import Auth0Provider from "@bcwdev/auth0provider";
-import { dbContext } from "../db/DbContext";
 import boardListsService from "../services/BoardListsService";
 import tasksService from "../services/TasksService";
 
