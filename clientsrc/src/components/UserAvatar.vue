@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-items-center" :class="left ? 'flex-row-reverse': ''">
+  <div class="d-flex align-items-center" :class="{inline: 'inline', left: 'flex-row-reverse'}">
     <img
       :src="user.picture"
       :height="height"
@@ -19,7 +19,8 @@ export default {
     showName: { type: Boolean, default: false },
     rounded: { type: Boolean, default: false },
     circle: { type: Boolean, default: false },
-    left: { type: Boolean, default: false }
+    left: { type: Boolean, default: false },
+    inline: { type: Boolean, default: false }
   }
 };
 </script>
@@ -28,5 +29,9 @@ export default {
 img {
   object-fit: cover;
   object-position: top center;
+}
+
+.inline {
+  display: inline;
 }
 </style>

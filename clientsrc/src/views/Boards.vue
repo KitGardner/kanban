@@ -1,31 +1,17 @@
 <template>
   <div>
-    <!-- FIXME extract to a BoardEditorComponent -->
-    <form @submit.prevent="createBoard">
-      <div class="mb-3">
-        <label for="name">Name:</label>
-        <input class="form-control" type="text" v-model="editable.name" />
-      </div>
-      <div class="mb-3">
-        <label for="name">Description:</label>
-        <input class="form-control" type="text" v-model="editable.description" />
-      </div>
-
-      <div class="my-3">
-        <button class="btn btn-success btn-block">Create Board</button>
-      </div>
-    </form>
-    <!-- FIXME CREATE A BoardCardComponent -->
-    <div class="boards">
-      <div class="card p-2 my-2 elevation-4" v-for="board in boards" :key="board.id">
-        <router-link :to="{name: 'Board', params: {boardId: board.id}}">{{board.name}}</router-link>
-      </div>
+    <div v-for="board in boards" :key="board.id" class="board-preview">
+      <board-card :board="board" />
+    </div>
+    <div class="board-preview">
+      <board-card :board="board" creator />
     </div>
   </div>
 </template>
 
 <script>
 import { Board } from "../models/Board";
+import BoardCard from "../components/BoardCard";
 export default {
   name: "Boards",
   computed: {
@@ -46,9 +32,17 @@ export default {
       this.$store.dispatch("createBoard", this.editable);
       this.editable = new Board();
     }
+  },
+  components: {
+    BoardCard
   }
 };
 </script>
 
 <style>
+.board-preview {
+  width: 33%;
+  display: inline-block;
+  padding-right: 10px;
+}
 </style>

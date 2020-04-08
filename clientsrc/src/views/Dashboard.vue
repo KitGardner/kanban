@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row mt-3">
-      <div class="col-2 mx-auto">
+      <div class="col-1">
         <div class="d-flex flex-column links">
           <!-- TODO add routes -->
           <router-link
@@ -11,7 +11,7 @@
           >{{route.displayName}}</router-link>
         </div>
       </div>
-      <div class="col-8 mx-auto">
+      <div class="col-11 mx-auto">
         <div class="card shadow">
           <div class="p-3">
             <h4>{{routeName}}</h4>

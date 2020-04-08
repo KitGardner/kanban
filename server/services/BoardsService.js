@@ -56,7 +56,7 @@ class BoardsService {
   async getUserBoards(userInfo) {
     let profile = await helpers.validateCaller(userInfo);
 
-    let userBoards = dbContext.Boards.find({ creatorId: profile.id, deleted: false });
+    let userBoards = dbContext.Boards.find({ creatorId: profile.id, deleted: false }).populate("creatorId", ["name", "picture"]);
     // TODO Also grab boards that the user is a collaborator in and stitch them together
     return userBoards;
   }
