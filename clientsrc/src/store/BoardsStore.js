@@ -15,6 +15,10 @@ export default {
     },
     addBoard(state, board) {
       state.boards.push(new Board(board));
+    },
+    removeBoard(state, id) {
+      let index = state.boards.findIndex(b => b.id == id);
+      state.boards.splice(index, 1);
     }
   },
   actions: {
@@ -31,6 +35,14 @@ export default {
       // REVIEW when creating a board this sets it as the active board
       commit("setBoard", board);
       commit("addBoard", board);
+    },
+    async removeBoard({ commit }, id) {
+      try {
+        let deletedId = await $resource.delete("api/boards/" + id);
+        commit("removeBoard", id);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };

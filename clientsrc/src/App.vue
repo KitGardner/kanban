@@ -5,7 +5,7 @@
     <div class="loader-container">
       <div class="loader" v-if="loading"></div>
     </div>
-    <router-view />
+    <router-view @openModal="openModal" />
   </div>
 </template>
 
@@ -40,6 +40,9 @@ export default {
         ConfigureResource(this);
         this.$store.dispatch("initUserData");
       }
+    },
+    openModal() {
+      console.log("The app is listening");
     }
   }
 };

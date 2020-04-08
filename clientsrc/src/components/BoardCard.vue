@@ -1,11 +1,14 @@
 <template>
   <div class="board-card">
-    <div v-if="!creator" class="board-content">
+    <div class="board-content">
       <div class="d-flex justify-content-between">
-        <h3>{{board.name}}</h3>
+        <div>
+          <h3 class="inline">{{board.name}}</h3>
+          <i class="fa fa-folder-open icon"></i>
+        </div>
         <div>
           <i class="fa fa-edit icon"></i>
-          <i class="fa fa-trash icon"></i>
+          <i @click="deleteBoard" class="fa fa-trash icon"></i>
         </div>
       </div>
       <div>
@@ -46,6 +49,11 @@ export default {
   name: "BoardCard",
   props: {
     board: { type: Object, required: true }
+  },
+  methods: {
+    deleteBoard() {
+      this.$emit("delete", this.board);
+    }
   },
   components: {
     UserAvatar
