@@ -22,6 +22,8 @@ Vue.use(Auth0Plugin, {
   }
 });
 
+console.log("This is a change to mess with master");
+
 
 Vue.config.productionTip = false;
 
