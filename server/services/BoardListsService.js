@@ -19,7 +19,7 @@ class BoardListsService {
       throw new UnAuthorized("You are not the creator of this board which means you cannot modify it.")
     }
 
-    let updatedBoardList = await dbContext.BoardLists.findByIdAndUpdate(id, { deleted: true }, { new: true });
+    let updatedBoardList = await dbContext.BoardLists.findOneAndUpdate({ _id: id }, { deleted: true }, { new: true });
     return updatedBoardList;
   }
   async updatedBoardList(boardListData, userInfo, boardListId) {

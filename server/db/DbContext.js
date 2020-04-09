@@ -17,4 +17,44 @@ class DbContext {
   Tasks = mongoose.model("Task", TaskSchema);
 }
 
+async function deleteTaskComments(task, next) {
+  try {
+    let doc = await dbContext.Tasks.findOne(this.getQuery());
+    if (doc.deleted) {
+      await dbContext.Comments.updateMany({ taskId: doc.id }, { deleted: true })
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteListTasks(boardList, next) {
+  try {
+    if (boardList.deleted) {
+      await dbContext.Tasks.updateMany({ boardListId: boardList.id }, { deleted: true })
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+TaskSchema.post("findOneAndUpdate", deleteTaskComments);
+TaskSchema.post("updateMany", deleteTaskComments);
+
+BoardListSchema.post("findOneAndUpdate", deleteListTasks)
+BoardListSchema.post("updateMany", deleteListTasks)
+
+BoardSchema.post("findOneAndUpdate", async function (board, next) {
+  try {
+    if (board.deleted) {
+      await dbContext.BoardLists.updateMany({ boardId: board.id }, { deleted: true })
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+})
+
 export const dbContext = new DbContext();

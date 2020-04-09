@@ -11,7 +11,10 @@ class BoardsService {
       let profile = await helpers.validateCaller(userInfo);
     }
 
-    let userBoard = await dbContext.Boards.find({ _id: id, deleted: false });
+    let userBoard = await dbContext.Boards.findById(id);
+    if (!userBoard || userBoard.deleted) {
+      throw new BadRequest("You are trying to grab a board that does not exist");
+    }
     return userBoard;
   }
   async deleteBoard(id, userInfo) {

@@ -14,9 +14,7 @@ class TasksService {
   }
   async deleteTask(id, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
-    let updatedTask = await dbContext.Tasks.findByIdAndUpdate(id, { deleted: true }, { new: true });
-
-    let result = await dbContext.Comments.updateMany({ taskId: updatedTask.id }, { deleted: true });
+    let updatedTask = await dbContext.Tasks.findOneAndUpdate({ _id: id }, { deleted: true }, { new: true });
     return updatedTask;
   }
   async updateTask(id, taskData, userInfo) {
