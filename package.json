@@ -11,7 +11,7 @@
     "serve": "npm run serve --prefix ./clientsrc",
     "build": "npm install @vue/cli@latest && env NODE_ENV=test npm install --prefix ./clientsrc && npm run build --prefix ./clientsrc"
   },
-  "author": "GamesDevKit",
+  "author": "Codeworks",
   "license": "ISC",
   "dependencies": {
     "@bcwdev/auth0-vue": "0.0.7",
