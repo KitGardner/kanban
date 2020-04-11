@@ -19,16 +19,24 @@ export default {
     removeBoard(state, id) {
       let index = state.boards.findIndex(b => b.id == id);
       state.boards.splice(index, 1);
+    },
+    updateBoard(state, boardData) {
+      let updatedBoard = new Board(boardData);
+      let index = state.boards.findIndex(b => b.id == updatedBoard.id);
+      state.boards.splice(index, 1, updatedBoard);
     }
   },
   actions: {
     async getBoards({ commit }) {
-      let boards = await $resource.get("api/boards");
+      let data = await $resource.get("api/boards");
+      let boards = data.map(d => new Board(d));
       commit("setBoards", boards);
     },
-    async getBoard({ commit }, id) {
-      let boards = await $resource.get("api/boards/" + id);
-      commit("setBoard", boards);
+    async getBoard({ commit, dispatch }, id) {
+      let data = await $resource.get("api/boards/" + id);
+      let board = new Board(data);
+      commit("setBoard", board);
+      dispatch("getBoardLists", board.id);
     },
     async createBoard({ commit }, boardData) {
       let board = await $resource.post("api/boards/", boardData);
@@ -38,8 +46,16 @@ export default {
     },
     async removeBoard({ commit }, id) {
       try {
-        let deletedId = await $resource.delete("api/boards/" + id);
-        commit("removeBoard", id);
+        let deleted = await $resource.delete("api/boards/" + id);
+        commit("removeBoard", deleted.id);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async updateBoard({ commit }, boardData) {
+      try {
+        let updatedBoard = await $resource.put("api/boards/" + boardData.id, boardData);
+        commit("updateBoard", updatedBoard)
       } catch (error) {
         console.log(error);
       }

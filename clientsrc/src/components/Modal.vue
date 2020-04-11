@@ -4,7 +4,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Delete Board?</h5>
+            <slot name="header"></slot>
             <button
               type="button"
               class="close"
@@ -16,7 +16,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <p>All data tied to this board will be deleted. Continue?</p>
+            <slot name="body"></slot>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" @click="confirm">Confirm</button>

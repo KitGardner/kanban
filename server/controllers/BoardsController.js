@@ -13,7 +13,7 @@ export class BoardsController extends BaseController {
       .get("", this.getAllBoards)
       .get("/:id", this.getBoard)
       .get("/:boardId/lists", this.getBoardLists)
-      .get(":boardId/tasks", this.getBoardTasks)
+      .get("/:boardId/tasks", this.getBoardTasks)
       .post("", this.createBoard)
       .put("/:id", this.updateBoard)
       .delete("/:id", this.deleteBoard);
@@ -75,7 +75,7 @@ export class BoardsController extends BaseController {
   async deleteBoard(req, res, next) {
     try {
       let result = await boardsService.deleteBoard(req.params.id, req.userInfo);
-      res.send(result);
+      res.send({ id: result });
     } catch (error) {
       next(error);
     }

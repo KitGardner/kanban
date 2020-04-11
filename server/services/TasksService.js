@@ -24,7 +24,7 @@ class TasksService {
   }
   async createTask(taskData, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
-    let newTask = await dbContext.Tasks.create({ ...taskData, creatorId: profile.id });
+    let newTask = await dbContext.Tasks.create({ ...taskData, creator: profile.id });
     return newTask;
   }
   async getTaskById(id, userInfo) {

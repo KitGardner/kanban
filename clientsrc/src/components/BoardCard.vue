@@ -1,13 +1,18 @@
 <template>
   <div class="board-card">
-    <div class="board-content">
+    <div v-if="creatorBoard" class="board-content" @click="createBoard">
+      <h1>+</h1>
+    </div>
+    <div v-else class="board-content">
       <div class="d-flex justify-content-between">
         <div>
           <h3 class="inline">{{board.name}}</h3>
-          <i class="fa fa-folder-open icon"></i>
+          <router-link :to="{name: 'Board', params:{boardId: board.id}}">
+            <i class="fa fa-folder-open icon"></i>
+          </router-link>
         </div>
         <div>
-          <i class="fa fa-edit icon"></i>
+          <i @click="editBoard" class="fa fa-edit icon"></i>
           <i @click="deleteBoard" class="fa fa-trash icon"></i>
         </div>
       </div>
@@ -22,11 +27,11 @@
           </tr>
           <tr>
             <td>
-              <user-avatar :user="board.creatorId" show-name height="40" circle />
+              <user-avatar :user="board.creator" show-name height="40" circle />
             </td>
             <td>
               <img
-                :src="board.creatorId.picture"
+                :src="board.creator.picture"
                 v-for="n in 5"
                 :key="n"
                 height="45"
@@ -48,11 +53,18 @@ import UserAvatar from "./UserAvatar";
 export default {
   name: "BoardCard",
   props: {
-    board: { type: Object, required: true }
+    board: { type: Object, required: false },
+    creatorBoard: { type: Boolean, default: false }
   },
   methods: {
     deleteBoard() {
       this.$emit("delete", this.board);
+    },
+    editBoard() {
+      this.$emit("edit", this.board);
+    },
+    createBoard() {
+      this.$emit("create");
     }
   },
   components: {

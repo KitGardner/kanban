@@ -11,7 +11,7 @@ export class BoardListsController extends BaseController {
       .use(Auth0Provider.isAuthorized)
       .get("/:listId/tasks", this.getListTasks)
       .post("", this.createBoardList)
-      .put("/:Id", this.updateBoardList)
+      .put("/:id", this.updateBoardList)
       .delete("/:id", this.deleteBoardList);
   }
 
@@ -34,7 +34,7 @@ export class BoardListsController extends BaseController {
 
   async updateBoardList(req, res, next) {
     try {
-      let updatedBoardList = await boardListsService.updatedBoardList(req.body, req.userInfo, req.params.id);
+      let updatedBoardList = await boardListsService.updateBoardList(req.body, req.userInfo, req.params.id);
       res.send(updatedBoardList);
     } catch (error) {
       next(error);
@@ -43,8 +43,8 @@ export class BoardListsController extends BaseController {
 
   async deleteBoardList(req, res, next) {
     try {
-      let deleted = await boardListsService.deleteBoardList(req.params.id, req.userInfo);
-      res.send(deleted.id);
+      let result = await boardListsService.deleteBoardList(req.params.id, req.userInfo);
+      res.send({ id: result });
     } catch (error) {
       next(error);
     }

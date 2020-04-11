@@ -17,11 +17,11 @@ class DbContext {
   Tasks = mongoose.model("Task", TaskSchema);
 }
 
-async function deleteTaskComments(task, next) {
+async function deleteTaskCommentsBulk(taskCommand, next) {
   try {
-    let doc = await dbContext.Tasks.findOne(this.getQuery());
-    if (doc.deleted) {
-      await dbContext.Comments.updateMany({ taskId: doc.id }, { deleted: true })
+    let task = await dbContext.Tasks.findOne(this.getQuery());
+    if (task && task.deleted) {
+      await dbContext.Comments.updateMany({ taskId: task.id }, { deleted: true })
     }
     next();
   } catch (error) {
@@ -29,9 +29,21 @@ async function deleteTaskComments(task, next) {
   }
 }
 
-async function deleteListTasks(boardList, next) {
+async function deleteTaskCommentsSingle(task, next) {
   try {
-    if (boardList.deleted) {
+    if (task && task.deleted) {
+      await dbContext.Comments.updateMany({ taskId: task.id }, { deleted: true })
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteListTasksBulk(boardListCommand, next) {
+  try {
+    let boardList = await dbContext.BoardLists.findOne(this.getQuery());
+    if (boardList && boardList.deleted) {
       await dbContext.Tasks.updateMany({ boardListId: boardList.id }, { deleted: true })
     }
     next();
@@ -40,11 +52,22 @@ async function deleteListTasks(boardList, next) {
   }
 }
 
-TaskSchema.post("findOneAndUpdate", deleteTaskComments);
-TaskSchema.post("updateMany", deleteTaskComments);
+async function deleteListTasksSingle(boardList, next) {
+  try {
+    if (boardList && boardList.deleted) {
+      await dbContext.Tasks.updateMany({ boardListId: boardList.id }, { deleted: true })
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
 
-BoardListSchema.post("findOneAndUpdate", deleteListTasks)
-BoardListSchema.post("updateMany", deleteListTasks)
+TaskSchema.post("findOneAndUpdate", deleteTaskCommentsSingle);
+TaskSchema.post("updateMany", deleteTaskCommentsBulk);
+
+BoardListSchema.post("findOneAndUpdate", deleteListTasksSingle)
+BoardListSchema.post("updateMany", deleteListTasksBulk)
 
 BoardSchema.post("findOneAndUpdate", async function (board, next) {
   try {

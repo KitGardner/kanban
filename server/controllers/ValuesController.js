@@ -20,7 +20,7 @@ export class ValuesController extends BaseController {
   async create(req, res, next) {
     try {
       // NOTE NEVER TRUST THE CLIENT TO ADD THE CREATOR ID
-      req.body.creatorId = req.user.sub;
+      req.body.creator = req.user.sub;
       res.send(req.body);
     } catch (error) {
       next(error);

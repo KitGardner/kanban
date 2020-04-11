@@ -8,7 +8,7 @@ class CommentsService {
       let profile = await helpers.validateCaller(userInfo);
     }
     let comment = await dbContext.Comments.findById(id);
-    if (comment.creatorId != profile.id) {
+    if (comment.creator != profile.id) {
       throw new UnAuthorized("You are not the creator of this comment, therefore you cannot delete it.")
     }
 
@@ -18,7 +18,7 @@ class CommentsService {
   async updateComment(id, commentData, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
     let comment = await dbContext.Comments.findById(id);
-    if (comment.creatorId != profile.id) {
+    if (comment.creator != profile.id) {
       throw new UnAuthorized("You are not the creator of this comment, therefore you cannot edit it.")
     }
 
@@ -27,11 +27,11 @@ class CommentsService {
   }
   async createComment(commentData, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
-    let newComment = dbContext.Comments.create({ ...commentData, creatorId: profile.id });
+    let newComment = dbContext.Comments.create({ ...commentData, creator: profile.id });
     return newComment;
   }
   async getCommentsForTask(taskId) {
-    return await dbContext.Comments.find({ taskId: taskId, deleted: false }).populate("creatorId", ["name", "picture"]);
+    return await dbContext.Comments.find({ taskId: taskId, deleted: false }).populate("creator", ["name", "picture"]);
   }
 
 }

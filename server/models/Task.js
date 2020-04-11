@@ -6,7 +6,7 @@ export const TaskSchema = new Schema(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
-    creatorId: { type: ObjectId, ref: "Profile", required: true },
+    creator: { type: ObjectId, ref: "Profile", required: true },
     boardListId: { type: ObjectId, ref: "BoardList", required: true },
     boardId: { type: ObjectId, ref: "Board", required: true },
     comments: [{ type: ObjectId, ref: "Comment" }],
