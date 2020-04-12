@@ -5,7 +5,11 @@
         <h1 class="inline">{{board.name}}</h1>
         <div class="inline" @click="editList">
           <i class="fa fa-plus-square icon"></i>
-          <h3 class="inline">Add new List</h3>
+          <h3 class="inline">List</h3>
+        </div>
+        <div class="inline" @click="editTask">
+          <i class="fa fa-plus-square icon"></i>
+          <h3 class="inline">Task</h3>
         </div>
       </div>
     </div>
@@ -26,6 +30,12 @@
         </div>
       </div>
     </modal>
+    <modal v-if="isModalOpen && isEditingTask" @close="closeModal" @confirm="saveTask">
+      <div slot="header">Task Information</div>
+      <div slot="body">
+        <task :task="editableTask" />
+      </div>
+    </modal>
     <div class="boxes d-flex">
       <div class="m-1" v-for="list in lists" :key="list.id">
         <board-list-card :list="list" @delete="confirmDelete" @edit="editList" />
@@ -38,6 +48,8 @@
 import boardListCard from "../components/BoardList";
 import BoardList from "../models/BoardList";
 import Modal from "../components/Modal";
+import Task from "../models/Task";
+import task from "../components/Task";
 
 export default {
   name: "Board",
@@ -47,10 +59,16 @@ export default {
   data() {
     return {
       editableList: new BoardList(),
+      editableTask: new Task(),
       isDeleting: false,
+      isDeletingTask: false,
       isEditing: false,
+      isEditingTask: false,
       isModalOpen: false
     };
+  },
+  beforeDestroy() {
+    this.$store.dispatch("clearBoardData");
   },
   computed: {
     board() {
@@ -66,12 +84,26 @@ export default {
       this.isEditing = true;
       this.openModal();
     },
+    editTask(task = new Task()) {
+      this.editableTask = new Task(task);
+      this.isEditingTask = true;
+      this.openModal();
+    },
     saveList() {
       if (this.editableList.id) {
         this.$store.dispatch("updateBoardList", this.editableList);
       } else {
         this.editableList.boardId = this.$route.params.boardId;
         this.$store.dispatch("addBoardList", this.editableList);
+      }
+      this.closeModal();
+    },
+    saveTask() {
+      if (this.editableTask.id) {
+        this.$store.dispatch("updateTask", this.editableTask);
+      } else {
+        this.editableTask.boardId = this.$route.params.boardId;
+        this.$store.dispatch("createTask", this.editableTask);
       }
       this.closeModal();
     },
@@ -94,12 +126,15 @@ export default {
     closeModal() {
       this.isDeleting = false;
       this.isEditing = false;
+      this.isEditingTask = false;
+      this.isDeletingTask = false;
       this.isModalOpen = false;
     }
   },
   components: {
     boardListCard,
-    Modal
+    Modal,
+    task
   }
 };
 </script>
@@ -108,6 +143,7 @@ export default {
 .boxes {
   max-width: 100vw;
   overflow-x: auto;
+  overflow-y: auto;
 }
 
 .box {

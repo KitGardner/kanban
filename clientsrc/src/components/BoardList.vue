@@ -7,16 +7,56 @@
         <i @click="editList" class="fa fa-edit icon"></i>
       </h3>
     </div>
-    <div>Here will be the tasks</div>
+    <div>
+      <task-card
+        v-for="task in listTasks"
+        :task="task"
+        :key="task.name"
+        @delete="confirmDelete"
+        @edit="confirmEdit"
+      />
+    </div>
+    <modal v-if="isModalOpen && isEditing" @close="closeModal" @confirm="updateTask">
+      <div slot="header">Task Information</div>
+      <div slot="body">
+        <task :task="editableTask" />
+      </div>
+    </modal>
+    <modal v-if="isModalOpen && isDeleting" @close="closeModal" @confirm="deleteTask">
+      <div slot="header">Delete Task?</div>
+      <div slot="body">This will remove the task and any comments tied to it. Continue?</div>
+    </modal>
   </div>
 </template>
 
 <script>
 import BoardList from "../models/BoardList";
+import TaskCard from "./TaskCard";
+import modal from "../components/Modal";
+import Task from "../models/Task";
+import task from "../components/Task";
 export default {
   name: "BoardList",
+  mounted() {
+    this.$store.dispatch("getListTasks", this.list.id);
+  },
+  data() {
+    return {
+      isEditing: false,
+      isDeleting: false,
+      isModalOpen: false,
+      editableTask: new Task()
+    };
+  },
   props: {
     list: { type: BoardList, required: true }
+  },
+  computed: {
+    listTasks() {
+      return this.$store.state.tasksStore.listTasks.filter(
+        task => task.boardListId == this.list.id
+      );
+    }
   },
   methods: {
     deleteList() {
@@ -24,7 +64,39 @@ export default {
     },
     editList() {
       this.$emit("edit", this.list);
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isEditing = false;
+      this.isDeleting = false;
+      this.isModalOpen = false;
+      this.editableTask = new Task();
+    },
+    confirmDelete(task) {
+      this.editableTask = task;
+      this.isDeleting = true;
+      this.openModal();
+    },
+    confirmEdit(task) {
+      this.editableTask = new Task(task);
+      this.isEditing = true;
+      this.openModal();
+    },
+    deleteTask() {
+      this.$store.dispatch("deleteTask", this.editableTask.id);
+      this.closeModal();
+    },
+    updateTask() {
+      this.$store.dispatch("updateTask", this.editableTask);
+      this.closeModal();
     }
+  },
+  components: {
+    TaskCard,
+    modal,
+    task
   }
 };
 </script>

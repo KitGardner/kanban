@@ -9,23 +9,23 @@ class TasksService {
   }
   async getListTasks(listId, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
-    let listTasks = await dbContext.Tasks.find({ boardListId: listId, deleted: false });
+    let listTasks = await dbContext.Tasks.find({ boardListId: listId, deleted: false }).populate("creator", ["name", "picture"]);
     return listTasks;
   }
   async deleteTask(id, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
     let updatedTask = await dbContext.Tasks.findOneAndUpdate({ _id: id }, { deleted: true }, { new: true });
-    return updatedTask;
+    return { id: updatedTask.id };
   }
   async updateTask(id, taskData, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
-    let newTask = await dbContext.Tasks.findByIdAndUpdate(id, taskData, { new: true });
+    let newTask = await dbContext.Tasks.findByIdAndUpdate(id, taskData, { new: true }).populate("creator", ["name", "picture"]);
     return newTask;
   }
   async createTask(taskData, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
     let newTask = await dbContext.Tasks.create({ ...taskData, creator: profile.id });
-    return newTask;
+    return await dbContext.Tasks.findById(newTask.id).populate("creator", ["name", "picture"]);
   }
   async getTaskById(id, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
