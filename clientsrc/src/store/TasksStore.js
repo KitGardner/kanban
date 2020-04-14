@@ -4,41 +4,34 @@ import Task from "../models/Task";
 
 export default {
   state: {
-    listTasks: [],
+    boardTasks: [],
     activeTask: {}
   },
   mutations: {
-    setListTasks(state, listTasksData) {
-      state.activeTasks = {};
-      state.listTasks = state.listTasks.concat(listTasksData.tasks);
-    },
-    clearListTasks(state) {
-      state.listTasks = [];
-      state.activeTask = {};
+    setBoardTasks(state, boardTasksData) {
+      state.boardTasks = state.boardTasks = boardTasksData;
     },
     setActiveTask(state, task) {
       state.activeTask = task;
     },
     addTask(state, task) {
-      state.listTasks.push(task);
+      state.boardTasks.push(task);
     },
     updateTask(state, task) {
-      let index = state.listTasks.findIndex(t => t.id == task.id);
-      state.listTasks.splice(index, 1, task);
+      let index = state.boardTasks.findIndex(t => t.id == task.id);
+      state.boardTasks.splice(index, 1, task);
     },
     deleteTask(state, taskId) {
-      let index = state.listTasks.findIndex(t => t.id == taskId);
-      state.listTasks.splice(index, 1);
+      let index = state.boardTasks.findIndex(t => t.id == taskId);
+      state.boardTasks.splice(index, 1);
     }
   },
   actions: {
-    async getListTasks({ commit }, listId) {
+    async getBoardTasks({ commit }, boardId) {
       try {
-        console.log("Getting List Tasks");
-
-        let data = await $resource.get(`api/boardLists/${listId}/tasks`);
-        let listTasks = data.map(d => new Task(d));
-        commit("setListTasks", { listId: listId, tasks: listTasks }); // TODO Change this to just the task data if not needed.
+        let data = await $resource.get(`api/boards/${boardId}/tasks`);
+        let boardTasks = data.map(d => new Task(d));
+        commit("setBoardTasks", boardTasks); // TODO Change this to just the task data if not needed.
       } catch (error) {
         toastError(error);
       }

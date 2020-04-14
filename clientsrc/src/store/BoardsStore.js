@@ -37,6 +37,7 @@ export default {
       let board = new Board(data);
       commit("setBoard", board);
       dispatch("getBoardLists", board.id);
+      dispatch("getBoardTasks", board.id);
     },
     async createBoard({ commit }, boardData) {
       let board = await $resource.post("api/boards/", boardData);

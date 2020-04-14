@@ -31,14 +31,7 @@ export default new Vuex.Store({
     async updateProfile({ commit }, update) {
       let profile = await $resource.put("api/profile", update);
       commit("setProfile", profile);
-    },
-    async clearBoardData({ commit }) {
-      commit("setBoard", new Board());
-      commit("setBoardLists", []);
-      commit("clearListTasks");
-      commit("setTaskComments", []);
     }
-
   },
   modules: {
     boardsStore,

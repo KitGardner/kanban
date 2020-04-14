@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div>
-      <h3>
+      <h3 :title="list.description">
         {{list.name}}
         <i @click="deleteList" class="fa fa-trash icon"></i>
         <i @click="editList" class="fa fa-edit icon"></i>
@@ -37,9 +37,6 @@ import Task from "../models/Task";
 import task from "../components/Task";
 export default {
   name: "BoardList",
-  mounted() {
-    this.$store.dispatch("getListTasks", this.list.id);
-  },
   data() {
     return {
       isEditing: false,
@@ -53,7 +50,7 @@ export default {
   },
   computed: {
     listTasks() {
-      return this.$store.state.tasksStore.listTasks.filter(
+      return this.$store.state.tasksStore.boardTasks.filter(
         task => task.boardListId == this.list.id
       );
     }

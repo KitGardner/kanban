@@ -1,6 +1,6 @@
 <template>
   <div class="task-card">
-    <h4>{{task.name}}</h4>
+    <h4 :title="task.description">{{task.name}}</h4>
     <div class="d-flex justify-content-between">
       <div>
         <i @click="editTask" class="fa fa-edit icon"></i>

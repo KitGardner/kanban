@@ -67,9 +67,6 @@ export default {
       isModalOpen: false
     };
   },
-  beforeDestroy() {
-    this.$store.dispatch("clearBoardData");
-  },
   computed: {
     board() {
       return this.$store.state.boardsStore.board;

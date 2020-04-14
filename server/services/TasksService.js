@@ -4,7 +4,7 @@ import { dbContext } from "../db/DbContext";
 class TasksService {
   async getBoardTasks(boardId, userInfo) {
     let profile = await helpers.validateCaller(userInfo);
-    let boardTasks = await dbContext.Tasks.find({ boardId: boardId, deleted: false });
+    let boardTasks = await dbContext.Tasks.find({ boardId: boardId, deleted: false }).populate("creator", ["name", "picture"]);
     return boardTasks;
   }
   async getListTasks(listId, userInfo) {
