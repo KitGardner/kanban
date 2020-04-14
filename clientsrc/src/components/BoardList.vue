@@ -19,7 +19,7 @@
     <modal v-if="isModalOpen && isEditing" @close="closeModal" @confirm="updateTask">
       <div slot="header">Task Information</div>
       <div slot="body">
-        <task :task="editableTask" />
+        <task :task="editableTask" :showComments="editableTask.id != undefined" />
       </div>
     </modal>
     <modal v-if="isModalOpen && isDeleting" @close="closeModal" @confirm="deleteTask">

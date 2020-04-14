@@ -10,7 +10,7 @@ export class CommentsController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .use(Auth0Provider.isAuthorized)
       .post("", this.createComment)
-      .put("/id", this.updateComment)
+      .put("/:id", this.updateComment)
       .delete("/:id", this.deleteComment);
   }
 
@@ -35,7 +35,7 @@ export class CommentsController extends BaseController {
   async deleteComment(req, res, next) {
     try {
       let deleted = await commentsService.deleteComment(req.params.id, req.userInfo);
-      res.send(deleted.id);
+      res.send({ id: deleted.id });
     } catch (error) {
       next(error);
     }

@@ -3,6 +3,7 @@ import Auth0Provider from "@bcwdev/auth0provider";
 import boardsService from "../services/BoardsService";
 import boardListsService from "../services/BoardListsService";
 import tasksService from "../services/TasksService";
+import commentsService from "../services/CommentsService";
 
 export class BoardsController extends BaseController {
   constructor() {
@@ -14,6 +15,7 @@ export class BoardsController extends BaseController {
       .get("/:id", this.getBoard)
       .get("/:boardId/lists", this.getBoardLists)
       .get("/:boardId/tasks", this.getBoardTasks)
+      .get("/:boardId/comments", this.getBoardComments)
       .post("", this.createBoard)
       .put("/:id", this.updateBoard)
       .delete("/:id", this.deleteBoard);
@@ -42,6 +44,15 @@ export class BoardsController extends BaseController {
       res.send(boardLists);
     } catch (error) {
       next(error)
+    }
+  }
+
+  async getBoardComments(req, res, next) {
+    try {
+      let boardComments = await commentsService.getBoardComments(req.params.boardId, req.userInfo);
+      res.send(boardComments);
+    } catch (error) {
+      next(error);
     }
   }
 
@@ -81,7 +92,7 @@ export class BoardsController extends BaseController {
     }
   }
 
-  // TODO implement full delete for all objects. This delete should delete all children objects as well. NO ORPHANS!!
+  // TODO implement full delete for all objects. This delete should delete all children objects as well. NO ORPHANS!!. Tasks are still lingering.
   // TODO Add Board Id to all objects. This way for any call we can verify if the user is the creator and or collaborator for this board before making changes.
   // TODO Test all endpoints to ensure proper operation.
   // TODO think about adding collaborator logic to Profile controller to grab all boards that the user is a collaborator of.

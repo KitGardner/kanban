@@ -38,6 +38,7 @@ export default {
       commit("setBoard", board);
       dispatch("getBoardLists", board.id);
       dispatch("getBoardTasks", board.id);
+      dispatch("getBoardComments", board.id);
     },
     async createBoard({ commit }, boardData) {
       let board = await $resource.post("api/boards/", boardData);
