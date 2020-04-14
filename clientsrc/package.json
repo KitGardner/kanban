@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "npm install @vue/unit-jest && vue-cli-service build"
+    "build": "vue add @vue/unit-jest && vue-cli-service build"
   },
   "dependencies": {
     "@bcwdev/auth0-vue": "0.0.7",
