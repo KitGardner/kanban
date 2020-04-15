@@ -19,9 +19,13 @@ class DbContext {
 
 async function deleteTaskCommentsBulk(taskCommand, next) {
   try {
-    let task = await dbContext.Tasks.findOne(this.getQuery());
-    if (task && task.deleted) {
-      await dbContext.Comments.updateMany({ taskId: task.id }, { deleted: true })
+    let tasks = await dbContext.Tasks.find(this.getQuery());
+    if (tasks && tasks.length > 0) {
+      tasks.forEach(async task => {
+        if (task.deleted) {
+          await dbContext.Comments.updateMany({ taskId: task.id }, { deleted: true })
+        }
+      })
     }
     next();
   } catch (error) {
@@ -42,9 +46,13 @@ async function deleteTaskCommentsSingle(task, next) {
 
 async function deleteListTasksBulk(boardListCommand, next) {
   try {
-    let boardList = await dbContext.BoardLists.findOne(this.getQuery());
-    if (boardList && boardList.deleted) {
-      await dbContext.Tasks.updateMany({ boardListId: boardList.id }, { deleted: true })
+    let boardLists = await dbContext.BoardLists.find(this.getQuery());
+    if (boardLists && boardLists.length > 0) {
+      boardLists.forEach(async boardList => {
+        if (boardList.deleted) {
+          await dbContext.Tasks.updateMany({ boardListId: boardList.id }, { deleted: true })
+        }
+      })
     }
     next();
   } catch (error) {

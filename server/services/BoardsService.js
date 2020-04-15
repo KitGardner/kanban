@@ -26,7 +26,7 @@ class BoardsService {
       throw new BadRequest("The calling user cannot delete the board because they are not the creator.")
     }
 
-    let updatedBoard = await dbContext.Boards.findByIdAndUpdate(id, { deleted: true }, { new: true });
+    let updatedBoard = await dbContext.Boards.findOneAndUpdate({ _id: id }, { deleted: true }, { new: true });
     if (!updatedBoard) {
       throw new Unexpected("There was an error deleting the board with Id " + id);
     }
