@@ -42,7 +42,6 @@ export default {
     },
     async createBoard({ commit }, boardData) {
       let board = await $resource.post("api/boards/", boardData);
-      // REVIEW when creating a board this sets it as the active board
       commit("setBoard", board);
       commit("addBoard", board);
     },

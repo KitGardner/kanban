@@ -9,6 +9,7 @@ export const BoardListSchema = new Schema(
     boardId: { type: ObjectId, ref: "Board", required: true },
     creator: { type: ObjectId, ref: "Profile", required: true },
     tasksList: [{ type: ObjectId, ref: "Task" }],
+    order: { type: Number, required: true },
     deleted: { type: Boolean, default: false }
   },
   { timestamps: true, toJSON: { virtuals: true } }

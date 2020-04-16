@@ -1,13 +1,13 @@
 <template>
   <div>
-    <label for="name">Task</label>
-    <input type="text" name="name" v-model="task.name" />
-    <label for="listId">List</label>
-    <select name="listId" id v-model="task.boardListId">
+    <h3>Task</h3>
+    <input type="text" name="name" class="form-field" v-model="task.name" />
+    <h3>List</h3>
+    <select name="listId" id v-model="task.boardListId" class="form-field">
       <option v-for="option in listOptions" :key="option.id" :value="option.value">{{option.text}}</option>
     </select>
-    <label for="description">Description</label>
-    <input type="text" name="description" v-model="task.description" />
+    <h3>Description</h3>
+    <textarea name="description" id cols="45" rows="5" v-model="task.description"></textarea>
     <div v-if="showComments">
       <div>
         <textarea
@@ -21,17 +21,15 @@
         ></textarea>
         <button @click="saveComment">Save Comment</button>
       </div>
-      <modal v-if="isModalOpen && isDeleting" @close="closeModal" @confirm="deleteComment">
-        <div slot="body">Delete this comment?</div>
-      </modal>
-      <div class="comment-section">
-        <comment-card
-          v-for="comment in comments"
-          :key="comment.id"
-          :comment="comment"
-          @edit="editComment"
-          @delete="confirmDeleteComment"
-        />
+      <div v-if="comments.length > 0" class="comment-section">
+        <div v-for="comment in comments" :key="comment.id">
+          <div :hidden="!(isDeleting && editableComment.id == comment.id)">
+            Delete this comment?
+            <button @click="deleteComment">Yes</button>
+            <button @click="closeModal">No</button>
+          </div>
+          <comment-card :comment="comment" @edit="editComment" @delete="confirmDeleteComment" />
+        </div>
       </div>
     </div>
   </div>
@@ -112,7 +110,7 @@ export default {
 
 <style>
 .comment-section {
-  height: 40vh;
+  height: 30vh;
   width: 100%;
   margin-top: 10px;
   overflow-y: scroll;
@@ -122,5 +120,10 @@ export default {
   display: block;
   background-color: lightgray;
   border-style: inset;
+}
+
+.form-field {
+  width: 95%;
+  margin-bottom: 5px;
 }
 </style>

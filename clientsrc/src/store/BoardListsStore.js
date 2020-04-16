@@ -32,7 +32,7 @@ export default {
         console.log(error);
       }
     },
-    async addBoardList({ commit }, boardListData) {
+    async addBoardList({ commit, dispatch, state }, boardListData) {
       try {
         let data = await $resource.post("api/boardLists", boardListData);
         let boardList = new BoardList(data);

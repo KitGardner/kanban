@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
-    <router-link class="navbar-brand" :to="{ name: 'Home' }">CodeWorks Starter</router-link>
+    <router-link class="navbar-brand" :to="{ name: 'Home' }">Kanban Home</router-link>
     <button
       class="navbar-toggler"
       type="button"

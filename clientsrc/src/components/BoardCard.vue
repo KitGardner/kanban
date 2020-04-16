@@ -1,23 +1,23 @@
 <template>
   <div class="board-card">
-    <div v-if="creatorBoard" class="board-content" @click="createBoard">
-      <h1>+</h1>
+    <div v-if="creatorBoard" class="board-content transparent" @click="createBoard">
+      <h1 class="create-symbol">Add new Board</h1>
     </div>
     <div v-else class="board-content">
-      <div class="d-flex justify-content-between">
+      <div>
         <div>
           <h3 class="inline">{{board.name}}</h3>
-          <router-link :to="{name: 'Board', params:{boardId: board.id}}">
-            <i class="fa fa-folder-open icon"></i>
-          </router-link>
-        </div>
-        <div>
-          <i @click="editBoard" class="fa fa-edit icon"></i>
-          <i @click="deleteBoard" class="fa fa-trash icon"></i>
         </div>
       </div>
       <div>
         <p>{{board.description}}</p>
+      </div>
+      <div>
+        <router-link :to="{name: 'Board', params:{boardId: board.id}}">
+          <i class="fa fa-folder-open icon"></i>
+        </router-link>
+        <i @click="editBoard" class="fa fa-edit icon"></i>
+        <i @click="deleteBoard" class="fa fa-trash icon"></i>
       </div>
       <div>
         <table width="100%">
@@ -81,6 +81,7 @@ export default {
 .board-content {
   padding: 10px;
   background-color: lightgray;
+  min-height: 20vh;
 }
 
 .collaborator-img {
@@ -94,5 +95,14 @@ export default {
 
 .inline {
   display: inline;
+}
+
+.create-symbol {
+  font-size: 3.5rem;
+}
+
+.transparent {
+  opacity: 50%;
+  margin-top: 20px;
 }
 </style>

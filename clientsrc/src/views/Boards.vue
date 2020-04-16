@@ -1,9 +1,16 @@
 <template>
   <div>
-    <div v-for="board in boards" :key="board.id" class="board-preview">
-      <board-card :board="board" @delete="deleteBoardPrompt" @edit="editBoard" />
+    <div>
+      <board-card
+        v-for="board in boards"
+        :key="board.id"
+        class="board-preview"
+        :board="board"
+        @delete="deleteBoardPrompt"
+        @edit="editBoard"
+      />
+      <board-card creatorBoard @create="editBoard" class="board-preview" />
     </div>
-    <board-card creatorBoard @create="editBoard" class="board-preview" />
     <modal v-if="openModal && isDeleting" @close="closeModal" @confirm="deleteBoard">
       <div slot="header">Delete Board?</div>
       <div slot="body">Deleting this board will delete all data tied to it. Continue?</div>
@@ -11,18 +18,12 @@
     <modal v-if="openModal && isEditing" @close="closeModal" @confirm="createBoard">
       <div slot="header">Board Information</div>
       <div slot="body">
-        <div class="input-group">
-          <label for="id"></label>
-          <input type="text" name="id" hidden v-model="editable.id" />
-        </div>
-        <div class="input-group">
-          <label for="name">Name:</label>
-          <input type="text" name="name" v-model="editable.name" />
-        </div>
-        <div class="input-group">
-          <label for="description">Description:</label>
-          <input type="text" name="description" v-model="editable.description" />
-        </div>
+        <label for="id" hidden></label>
+        <input type="text" name="id" hidden v-model="editable.id" />
+        <h3>Name:</h3>
+        <input type="text" name="name" style="width: 95%;" v-model="editable.name" />
+        <h3>Description</h3>
+        <textarea name="description" id cols="45" rows="5" v-model="editable.description"></textarea>
       </div>
     </modal>
   </div>

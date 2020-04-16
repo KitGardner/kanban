@@ -1,11 +1,11 @@
 <template>
   <div class="box">
-    <div>
-      <h3 :title="list.description">
-        {{list.name}}
-        <i @click="deleteList" class="fa fa-trash icon"></i>
+    <div class="list-header">
+      <h3 class="text-center" :title="list.description">{{list.name}}</h3>
+      <div class="d-flex justify-content-between">
         <i @click="editList" class="fa fa-edit icon"></i>
-      </h3>
+        <i @click="deleteList" class="fa fa-trash icon"></i>
+      </div>
     </div>
     <div>
       <task-card
@@ -101,12 +101,17 @@ export default {
 <style>
 .boxes {
   max-width: 100vw;
-  overflow-x: auto;
+  overflow-x: scroll;
 }
 
 .box {
   min-height: 80vh;
   width: 16.67vw;
-  background-color: var(--gray);
+  background-color: blue;
+}
+
+.list-header {
+  background-color: #eeeeee;
+  border: 2px solid black;
 }
 </style>

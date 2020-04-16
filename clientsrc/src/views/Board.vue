@@ -4,11 +4,11 @@
       <div class="inline">
         <h1 class="inline">{{board.name}}</h1>
         <div class="inline" @click="editList">
-          <i class="fa fa-plus-square icon"></i>
+          <i class="fa fa-plus"></i>
           <h3 class="inline">List</h3>
         </div>
         <div class="inline" @click="editTask">
-          <i class="fa fa-plus-square icon"></i>
+          <i class="fa fa-plus"></i>
           <h3 class="inline">Task</h3>
         </div>
       </div>
@@ -20,14 +20,14 @@
     <modal v-if="isModalOpen && isEditing" @close="closeModal" @confirm="saveList">
       <div slot="header">List Information</div>
       <div slot="body">
-        <div class="form-group">
-          <label for="name">List Name</label>
-          <input type="text" name="name" v-model="editableList.name" />
-        </div>
-        <div class="form-group">
-          <label for="description">Description</label>
-          <textarea name="description" id cols="30" rows="10" v-model="editableList.description"></textarea>
-        </div>
+        <h3>Name</h3>
+        <input type="text" class="form-field" name="name" v-model="editableList.name" />
+        <h3>Order</h3>
+        <select v-model="editableList.order">
+          <option v-for="n in lists.length + 1" :key="n">{{n}}</option>
+        </select>
+        <h3>Description</h3>
+        <textarea name="description" id cols="45" rows="5" v-model="editableList.description"></textarea>
       </div>
     </modal>
     <modal v-if="isModalOpen && isEditingTask" @close="closeModal" @confirm="saveTask">
@@ -72,7 +72,9 @@ export default {
       return this.$store.state.boardsStore.board;
     },
     lists() {
-      return this.$store.state.boardListsStore.boardLists;
+      return this.$store.state.boardListsStore.boardLists.sort(
+        (listLeft, listRight) => listLeft.order > listRight.order
+      );
     }
   },
   methods: {
@@ -140,20 +142,24 @@ export default {
 .boxes {
   max-width: 100vw;
   overflow-x: auto;
-  overflow-y: auto;
 }
 
 .box {
   min-height: 80vh;
   width: 16.67vw;
-  background-color: var(--gray);
+  background-color: #cccccc;
 }
 .inline {
   display: inline;
+  margin-left: 10px;
 }
 .icon {
   margin-left: 10px;
   margin-right: 5px;
   font-size: 2rem;
+}
+
+.form-field {
+  width: 95%;
 }
 </style>

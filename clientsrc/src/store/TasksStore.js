@@ -31,7 +31,7 @@ export default {
       try {
         let data = await $resource.get(`api/boards/${boardId}/tasks`);
         let boardTasks = data.map(d => new Task(d));
-        commit("setBoardTasks", boardTasks); // TODO Change this to just the task data if not needed.
+        commit("setBoardTasks", boardTasks);
       } catch (error) {
         toastError(error);
       }

@@ -92,8 +92,6 @@ export class BoardsController extends BaseController {
     }
   }
 
-  // TODO implement full delete for all objects. This delete should delete all children objects as well. NO ORPHANS!!. Tasks are still lingering.
-  // TODO Add Board Id to all objects. This way for any call we can verify if the user is the creator and or collaborator for this board before making changes.
   // TODO Test all endpoints to ensure proper operation.
   // TODO think about adding collaborator logic to Profile controller to grab all boards that the user is a collaborator of.
 
